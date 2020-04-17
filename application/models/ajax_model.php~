@@ -1,0 +1,188 @@
+<?php
+
+/**
+ * class Ajax Model provides ajax 
+ * @author Mehdi Jalal <mehdi.jalal@live.com><mehdi@netlinks.af>
+ * @date: 28-Oct-2013
+ * @version 0.01
+ */
+class Ajax_model extends CI_Model {
+
+    public function __construct() {
+        parent::__construct();
+    }
+
+    public function check_username1($username) {
+        if ($username != '') {
+            $this->db->select('t1.username');
+            $this->db->from('users AS t1');
+            $this->db->where('t1.username', $username);
+            $query = $this->db->get();
+            if ($query) {
+                if ($query->num_rows() > 0) {
+                    return $query->row()->username;
+                } else {
+                    return 2;
+                }
+            } else {
+                return 2;
+            }
+        } else {
+            return FALSE;
+        }
+    }
+
+    /**
+     * 
+     * @param type $username
+     * @return int|boolean
+     */
+    public function check_email($email) {
+        if ($email != '') {
+            $this->db->select('t1.email');
+            $this->db->from('users AS t1');
+            $this->db->where('t1.email', $email);
+            $query = $this->db->get();
+            if ($query) {
+                if ($query->num_rows() > 0) {
+                    return $query->row()->email;
+                } else {
+                    return 2;
+                }
+            } else {
+                return 2;
+            }
+        } else {
+            return FALSE;
+        }
+    }
+    
+    /*
+     * Get Province by zone
+     */
+    function get_province_by_zone($zone) {
+        
+        $this->db->select("name_en");
+        $this->db->from('h_s_province');
+        $this->db->where('zone', $zone);
+        $this->db->order_by('name_en', 'ASC');
+        $query = $this->db->get();
+        if ($query) {
+            if ($query->num_rows() > 0) {
+                return $query->result();
+            } else {
+                return FALSE;
+            }
+        } else {
+            return FALSE;
+        }
+    }
+    
+    /*
+     * Get District by province
+     */
+    function get_district_by_province($province) {
+        
+        $this->db->select("district");
+        $this->db->from('h_s_districts');
+        $this->db->where('province', $province);
+        $this->db->order_by('district', 'ASC');
+        $query = $this->db->get();
+        if ($query) {
+            if ($query->num_rows() > 0) {
+                return $query->result();
+            } else {
+                return FALSE;
+            }
+        } else {
+            return FALSE;
+        }
+    }
+
+    /**
+     * Get District by province
+     */
+    function get_dis_by_prov($id, $lang = 'english') {
+        
+        if ($lang == "dari") {
+            $province = "t1.district_dr";
+        } elseif ($lang == "pashto") {
+            $province = "t1.district_pa";
+        } else {
+            $province = "t1.district";
+        }
+        
+        $this->db->select('' . $province . ' AS district');
+        $this->db->from('h_s_districts AS t1');
+        $this->db->where('t1.provincecode', $id);
+       
+        $this->db->order_by('t1.district', 'ASC');
+        $query = $this->db->get();
+        if ($query) {
+            if ($query->num_rows() > 0) {
+                return $query->result();
+            } else {
+                return FALSE;
+            }
+        } else {
+            return FALSE;
+        }
+    }
+
+    /**
+     * 
+     * @param type $id
+     * @return get village by district
+     */
+    function get_vil_by_prov($id, $lang = 'english') {
+        if ($lang == "dari") {
+            $province = "t1.village_dr";
+        } elseif ($lang == "pashto") {
+            $province = "t1.village_pa";
+        } else {
+            $province = "t1.village";
+        }
+        $this->db->select('' . $province . ' AS village,t1.villagecode');
+        $this->db->from('h_s_districts AS t1');
+        $this->db->where('t1.districtcode', $id);
+        $this->db->group_by('t1.villagecode');
+        $this->db->order_by('t1.village', 'ASC');
+        $query = $this->db->get();
+        if ($query) {
+            if ($query->num_rows() > 0) {
+                return $query->result();
+            } else {
+                return FALSE;
+            }
+        } else {
+            return FALSE;
+        }
+    }
+    
+    // Check the names in the database;
+    function check_name($name, $fieldname)
+    {
+
+        $this->db->select($fieldname);
+        $this->db->from('language_info');
+        $this->db->where($fieldname, $name);
+        $query = $this->db->get();
+        
+        if($query){
+            if($query->num_rows() > 0){
+                return FALSE;                
+            }
+            else{
+                return TRUE;
+            }
+        }
+        else{
+            return FALSE;
+        }
+        
+    }
+
+}
+
+//end of ajaxm model class
+?>
