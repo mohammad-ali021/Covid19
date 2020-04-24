@@ -1,1 +1,3 @@
-Deny from all
+RewriteEngine on
+RewriteCond $1 !^(index\.php|assets|robots\.txt)
+RewriteRule ^(.*)$ /covid-19/index.php/$1 [L]

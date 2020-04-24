@@ -6,10 +6,13 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
+  <meta name="description"
+        content="An interactive COVID-19 Dasboard (coronavirus) that vusulize the most updated data of covid-19 cases around the world." />
   <meta name="author" content="">
 
-  <title>Covid-19 - Dashboard</title>
+  <meta name="keywords"
+        content="COVID,Covid 19 Dashboard,visualizer Dashboard,COVID-19,Coronavirus,map,data visualization,disease,plague,covid visualizer,covidvisualizer,covid-19 visualizer dashboard,coronavirus visualizer,Corona Virus Interactive Dashboard, Covid-19 Gloabal Map" />
+  <title>Covid-19 Interactive Dashboard</title>
 
   <!-- Custom fonts for this template-->
   <link href="<?=base_url()?>assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -134,6 +137,7 @@
       var totalDeath;
       var totalRecover;
       var totalCritical;
+      var totalLastUpdate;
       $.getJSON('https://corona-api.com/countries', function(rows) {
         jsonObj=rows;
         
@@ -141,11 +145,13 @@
          totalDeath=0;
          totalRecover=0;
          totalCritical=0;
+         totalLastUpdate="";
             for (i in jsonObj){
                 for (j in jsonObj[i] ){
                     for (key in jsonObj[i][j]){
                         if (key ==="name" ){
                             options+="<option value="+jsonObj[i][j].code+">"+jsonObj[i][j].name+"</option>";
+                            totalLastUpdate=jsonObj[i][j].updated_at;
                         }else if (key==="latest_data"){
                             for (x in jsonObj[i][j][key]){
                                 if (x==="confirmed"){
@@ -165,6 +171,7 @@
         $('#total_death').html(totalDeath.toLocaleString());
         $('#total_recover').html(totalRecover.toLocaleString());
         $('#total_critical').html(totalCritical.toLocaleString());
+        $('#lst_update').html(totalLastUpdate);
 
       });
       $('.select2').change(function(e){
@@ -224,6 +231,8 @@
         $('#recovery_rate').html(covidData[11].toLocaleString()+"%");
         $('#death_rate').html(covidData[10].toLocaleString()+"%");
         $('#updated').html("Updated At: <br/> <br/>"+covidData[3]);
+        $('#lst_update').html(covidData[3]);
+        
 
         //var objvalue=JSON.parse(covidData);
       }
@@ -412,6 +421,12 @@
           <div class="copyright text-center my-auto">
             <span>Copyright &copy; brighttech.us 2020 Developed by <a href="http://behance.net/brighttech" target="_blank">Ali Abassi</a></a></span>
           </div>
+          <div class="copyright text-center my-auto">
+            <br/>
+            <span><a href="<#" data-toggle="modal" data-target="#aboutModal">About US</a></a></span>
+            | 
+            <span><a target="_blank" href="https://www.privacypolicygenerator.info/live.php?token=m8nqPqp9tFyOOOW0vIVTYwLM180TvSBa">Privacy Policy</a></a></span>
+          </div>
         </div>
       </footer>
       <!-- End of Footer -->
@@ -444,10 +459,39 @@
         $('.select2').select2();
     });
   </script>
- 
-
-  
-
 </body>
+
+<!-- Modal -->
+<div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">About US</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+                      <h3>Data last updated <span id="lst_update"></span> by <a href="https://corona-api.com/countries" target="_blank">Corona-api</a></h3>
+                      
+                      <p>
+                      This website has been developed by Ali Abassi a Software Developer.
+                      </p>
+                      <p>
+                      The aim of this information system is to provide a easy and user friendly, interactive way to visualize the impact of COVID-19 cases gloabaly. We wanted people to see this as something that impact all of us and we want to shows that how our world looks. It's not one country problem it's one earth – and this is what our earth looks like today during this crisis.
+                      </p>
+                      <p>
+                      The data is from Corona-api real-time updates refresh to see any changes.
+                      </p>
+                      <p>
+                      If you have questions, suggestions, or feedback, please send us an <a href="mailto:ali.abassi2010@gmail.com">Ali Abassi</a>. 
+                      </p>
+                      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 </html>

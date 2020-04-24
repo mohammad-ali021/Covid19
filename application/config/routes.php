@@ -39,6 +39,9 @@
 */
 
 $route['default_controller'] = "main/main";
+$route['privacy-policy'] = "main/main/privacyPolicy";
+
+
 $route['404_override'] = '';
 
 
